@@ -24,6 +24,6 @@ Beside command line parameters the input can be provided as environment variable
 
 ```
 docker build -t valueset-importer .
-docker run -e REPO_URL=https://github.com/WorldHealthOrganization/tng-valuesets.git -e DIRECTORY=knowledgeLibrary -e API_ENDPOINT=https://hapi.fhir.org/baseR4/ValueSet  valueset-importer
+docker run -e REPO_URL=https://github.com/WorldHealthOrganization/tng-valuesets.git -e DIRECTORY=tng-valuesets/knowledgeLibrary -e API_ENDPOINT=https://hapi.fhir.org/baseR4/ValueSet  valueset-importer
 ```
 
