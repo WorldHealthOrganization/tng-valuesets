@@ -17,3 +17,8 @@ Valuesets are maintained as JSON files in the subfolder `knowledgeLibrary` and s
 | vaccine-mah-manf.json              | List of vaccine manufacturers                                  | Github                    |
 | vaccine-medical-product.json       | List of the vaccines                                           | Github                    |
 | vaccine-prophylaxis.json           | List of the vaccine/prophylaxis types                          | Github                    |
+
+
+# Conventions
+
+- valuesets should use the filenames as unique id (without extension)

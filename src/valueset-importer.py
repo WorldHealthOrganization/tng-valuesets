@@ -3,6 +3,10 @@ import subprocess
 import sys
 import json
 import requests
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 def checkout_repository(repo_url):
     repo_name = repo_url.split('/')[-1].replace('.git', '')
@@ -15,7 +19,6 @@ def checkout_repository(repo_url):
         subprocess.run(["git", "pull"], check=True)
 
 
-#TODO use PUT as upload to support creation and update (Valuesets should use id as filename without .json)
 def upload_valuesets(directory, api_endpoint):
     # Iterate over all files in the directory
     for filename in os.listdir(directory):
@@ -30,13 +33,22 @@ def upload_valuesets(directory, api_endpoint):
                 'accept': 'application/fhir+json',
                 'Content-Type': 'application/fhir+json'
             }
-            response = requests.post(api_endpoint, headers=headers, json=data)
+
+            # Remove .json from filename and add it to the api_endpoint and as id of payload
+            filename_without_extension, _ = os.path.splitext(filename)
+            data['id'] = filename_without_extension
+            api_endpoint_id = f"{api_endpoint}/{filename_without_extension}"
+
+            print(f'PUT {api_endpoint_id}')
+            response = requests.put(api_endpoint_id, headers=headers, json=data)
 
             # Check if the request was successful
-            if response.status_code != 201:
-                print(f'Error: Failed to upload {filename}. Status code: {response.status_code}')
+            if response.status_code == 200:
+                logging.info(f'Successfully updated {filename}')
+            elif response.status_code == 201:
+                logging.info(f'Successfully created {filename}')
             else:
-                print(f'Successfully uploaded {filename}')
+                logging.error(f'Failed to upload {filename}. Status code: {response.status_code}, Response body: {response.text}')
 
 
 # Use the first command line argument as the repository URL, if not provided, use environment variable
